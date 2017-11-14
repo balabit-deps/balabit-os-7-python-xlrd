@@ -1,0 +1,16 @@
+#!/usr/bin/make -f
+
+export PYBUILD_NAME = xlrd
+
+%:
+	dh $@ --with python2,python3,sphinxdoc --buildsystem pybuild
+
+override_dh_installdocs:
+	dh_installdocs
+	PYTHONPATH=. sphinx-build -N -q -E -b html docs \
+		debian/python-xlrd-docs/usr/share/doc/python-xlrd-docs/
+
+override_dh_auto_install:
+	dh_auto_install
+	mv debian/python-xlrd/usr/bin/runxlrd.py debian/python-xlrd/usr/bin/runxlrd
+	rm debian/python3-xlrd/usr/bin/runxlrd.py
